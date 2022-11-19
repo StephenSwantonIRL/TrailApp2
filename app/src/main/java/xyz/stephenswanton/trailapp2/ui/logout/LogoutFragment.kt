@@ -43,6 +43,8 @@ class LogoutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Snackbar.make(view, R.string.signout_successful, Snackbar.LENGTH_LONG)
+            .show()
         var user: User = User("", "")
         _fragBinding!!.btnLogin.setOnClickListener {
             user.username = _fragBinding!!.username.text.toString()

@@ -39,6 +39,7 @@
     <string name="enter_valid_latitude">"You must enter a valid latitude. "</string>
     <string name="enter_valid_longitude">You must enter a valid longitude.</string>
     <string name="location_manually">or add location manually below...</string>
+    <string name="signout_successful">You have successfully signed out.</string>
     <string-array name="trail_type">
         <item>Running</item>
         <item>Hiking</item>

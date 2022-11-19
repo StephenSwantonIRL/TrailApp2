@@ -8,14 +8,20 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import xyz.stephenswanton.trailapp2.databinding.FragmentHomeBinding
+import xyz.stephenswanton.trailapp2.main.MainApp
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    lateinit var app: MainApp
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        app = activity?.application as MainApp
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
