@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber.i
@@ -61,6 +62,9 @@ class MyTrailListFragment : Fragment(), NavigateAction, TrailListener {
 
         binding!!.rvTrails.setLayoutManager(LinearLayoutManager(activity))
         binding.rvTrails.adapter = TrailAdapter(app.trails.findAll(),this)
+        binding.fab.setOnClickListener{
+            findNavController().navigate(R.id.createTrailFragment)
+        }
 
 
     }

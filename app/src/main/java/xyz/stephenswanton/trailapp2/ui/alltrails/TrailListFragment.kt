@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber.i
@@ -16,6 +18,7 @@ import xyz.stephenswanton.trailapp2.adapters.MarkerAdapter
 import xyz.stephenswanton.trailapp2.adapters.NavigateAction
 import xyz.stephenswanton.trailapp2.databinding.FragmentListTrailsBinding
 import xyz.stephenswanton.trailapp2.databinding.FragmentMarkerListBinding
+
 import xyz.stephenswanton.trailapp2.main.MainApp
 import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailMarker
@@ -60,6 +63,9 @@ class TrailListFragment : Fragment(), NavigateAction, TrailListener {
 
         binding!!.rvTrails.setLayoutManager(LinearLayoutManager(activity))
         binding.rvTrails.adapter = TrailAdapter(app.trails.findAll(),this)
+        binding.fab.setOnClickListener{
+            findNavController().navigate(R.id.createTrailFragment)
+        }
 
 
     }

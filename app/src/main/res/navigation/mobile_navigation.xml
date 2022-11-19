@@ -22,7 +22,11 @@
         android:id="@+id/nav_my_trails"
         android:name="xyz.stephenswanton.trailapp2.ui.mytrails.MyTrailListFragment"
         android:label="@string/menu_my_trails"
-        tools:layout="@layout/fragment_list_trails" />
+        tools:layout="@layout/fragment_list_trails" >
+        <action
+            android:id="@+id/action_nav_my_trails_to_createTrailFragment"
+            app:destination="@id/createTrailFragment" />
+    </fragment>
 
 
     <fragment
@@ -30,5 +34,10 @@
         android:name="xyz.stephenswanton.trailapp2.ui.logout.LogoutFragment"
         android:label="@string/menu_logout"
         tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/createTrailFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.createtrail.CreateTrailFragment"
+        android:label="fragment_create_trail"
+        tools:layout="@layout/fragment_create_trail" />
 
 </navigation>
