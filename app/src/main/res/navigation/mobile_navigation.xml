@@ -19,10 +19,10 @@
         tools:layout="@layout/fragment_list_trails" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="xyz.stephenswanton.trailapp2.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+        android:id="@+id/nav_my_trails"
+        android:name="xyz.stephenswanton.trailapp2.ui.mytrails.MyTrailListFragment"
+        android:label="@string/menu_my_trails"
+        tools:layout="@layout/fragment_list_trails" />
 
 
     <fragment
