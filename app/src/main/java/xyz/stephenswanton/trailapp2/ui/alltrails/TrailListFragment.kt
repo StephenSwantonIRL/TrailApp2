@@ -94,11 +94,14 @@ class TrailListFragment : Fragment(), NavigateAction, TrailListener {
     }
 
     override fun onEditIconClick(trail: Trail) {
-        TODO("Not yet implemented")
+        var bundle = Bundle()
+        bundle.putParcelable("trail", trail)
+        findNavController().navigate(R.id.createTrailFragment, bundle)
     }
 
     override fun onDeleteTrailIconClick(trail: Trail) {
-        TODO("Not yet implemented")
+        app!!.trails.deleteById(trail.id)
+
     }
 
     override fun onViewIconClick(trail: Trail) {

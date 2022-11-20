@@ -13,6 +13,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import timber.log.Timber
+import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateMarkerBinding
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateTrailBinding
@@ -39,6 +41,10 @@ class CreateTrailFragment : Fragment() {
         app = activity?.application as MainApp
         app!!.markersArray = mutableListOf()
         edit = false
+
+
+
+
     }
 
     override fun onCreateView(
@@ -52,6 +58,22 @@ class CreateTrailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (arguments?.getParcelable<Trail>("trail") != null) {
+
+            edit = true
+            trail = arguments?.getParcelable<Trail>("trail")!!
+            app!!.tempTrail = app!!.trails.findById(trail.id) ?: trail
+            i(app!!.tempTrail.toString())
+            _fragBinding!!.etTrailName.setText(app!!.tempTrail.name)
+            _fragBinding!!.etTrailDescription.setText(app!!.tempTrail.description)
+            var trailTypes = resources.getStringArray(R.array.trail_type)
+            Timber.i(trailTypes.toString())
+            var spinnerPosition = trailTypes.indexOf(trail.trailType) as Int
+            Timber.i("SpinnerPosition")
+            Timber.i(spinnerPosition.toString())
+            _fragBinding!!.spTrailType.setSelection(spinnerPosition)
+        }
 
         if (!edit) {
             app!!.markers = mutableListOf()
