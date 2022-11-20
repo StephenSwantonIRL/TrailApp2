@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_nav_my_trails_to_createTrailFragment"
             app:destination="@id/createTrailFragment" />
+        <action
+            android:id="@+id/action_nav_my_trails_to_viewTrailFragment"
+            app:destination="@id/viewTrailFragment" />
     </fragment>
 
 
@@ -52,5 +55,9 @@
             android:id="@+id/action_createMarkerFragment_to_createTrailFragment"
             app:destination="@id/createTrailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/viewTrailFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.viewtrail.ViewTrailFragment"
+        android:label="ViewTrailFragment" />
 
 </navigation>

@@ -104,7 +104,9 @@ class MyTrailListFragment : Fragment(), NavigateAction, TrailListener {
     }
 
     override fun onViewIconClick(trail: Trail) {
-        TODO("Not yet implemented")
+        var bundle = Bundle()
+        bundle.putParcelable("trail", trail)
+        findNavController().navigate(R.id.viewTrailFragment, bundle)
     }
 
 }
