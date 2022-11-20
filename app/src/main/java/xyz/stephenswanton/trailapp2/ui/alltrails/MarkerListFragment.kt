@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber.i
@@ -65,16 +66,12 @@ class MarkerListFragment : Fragment(), NavigateAction {
 
     override fun onEditIconClick(marker: TrailMarker) {
         var app = activity?.application as MainApp?
-        activity?.let {
-
-        }
     }
 
     override fun onViewIconClick(marker: TrailMarker) {
-        var app = activity?.application as MainApp?
-        activity?.let {
-
-        }
+        var bundle = Bundle()
+        bundle.putParcelable("marker", marker)
+        findNavController().navigate(R.id.viewMarkerFragment, bundle)
     }
 
 }
