@@ -3,10 +3,9 @@ package xyz.stephenswanton.trailapp2.ui.createtrail
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -36,6 +35,7 @@ class CreateTrailFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         app = activity?.application as MainApp
         app!!.markersArray = mutableListOf()
         edit = false
@@ -108,6 +108,37 @@ class CreateTrailFragment : Fragment() {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.create_trail_menu, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.miSave -> {
+                if (app!!.tempTrail.name.isEmpty()) {
+                    Toast.makeText(activity,R.string.add_a_marker, Toast.LENGTH_LONG).show()
+                } else {
+                    app!!.tempTrail.name = _fragBinding!!.etTrailName.text.toString()
+                    app!!.tempTrail.trailType = trail.trailType.toString()
+                    app!!.tempTrail.description = _fragBinding!!.etTrailDescription.text.toString()
+                    if(edit){
+                        app!!.trails.update(app!!.tempTrail.copy())
+                    } else {
+                        app!!.trails.create(app!!.tempTrail.copy())
+                    }
+                    app!!.resetTempData()
+                    findNavController().navigate(R.id.nav_my_trails)
+                }
+
+            };
+            R.id.miCancel -> {
+                app!!.resetTempData()
+                findNavController().navigate(R.id.nav_my_trails)
+            }
+        }
+        return true
+    }
 
     override fun onResume() {
         super.onResume()
@@ -123,6 +154,7 @@ class CreateTrailFragment : Fragment() {
         }
 
     }
+
 }
 
 
