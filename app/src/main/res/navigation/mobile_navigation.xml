@@ -38,6 +38,19 @@
         android:id="@+id/createTrailFragment"
         android:name="xyz.stephenswanton.trailapp2.ui.createtrail.CreateTrailFragment"
         android:label="fragment_create_trail"
-        tools:layout="@layout/fragment_create_trail" />
+        tools:layout="@layout/fragment_create_trail" >
+        <action
+            android:id="@+id/action_createTrailFragment_to_createMarkerFragment"
+            app:destination="@id/createMarkerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createMarkerFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.createmarker.CreateMarkerFragment"
+        android:label="fragment_create_marker"
+        tools:layout="@layout/fragment_create_marker" >
+        <action
+            android:id="@+id/action_createMarkerFragment_to_createTrailFragment"
+            app:destination="@id/createTrailFragment" />
+    </fragment>
 
 </navigation>

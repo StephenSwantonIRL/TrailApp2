@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
@@ -88,7 +89,7 @@ class CreateMarkerFragment : Fragment() {
                     app!!.tempTrailObject.update(app!!.tempTrail)
                     if(edit){
                     }
-
+                    findNavController().navigateUp()
                 }
             }
 
