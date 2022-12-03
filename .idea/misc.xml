@@ -3,36 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-<<<<<<< Updated upstream
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/activity_main.xml" value="0.11503623188405797" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/app_bar_main.xml" value="0.11503623188405797" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/content_main.xml" value="0.25416666666666665" />
-=======
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/drawable-anydpi/ic_add_trail.xml" value="0.1215" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/drawable-anydpi/ic_view_detail.xml" value="0.1505" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/drawable/ic_glyph.xml" value="0.1215" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/activity_main.xml" value="0.11503623188405797" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/app_bar_main.xml" value="0.11503623188405797" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/content_main.xml" value="0.25416666666666665" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_create_marker.xml" value="0.20018115942028986" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_create_trail.xml" value="0.17135416666666667" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_home.xml" value="0.12183383991894631" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_list_trails.xml" value="0.2" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_logout.xml" value="0.1" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_maps.xml" value="0.17135416666666667" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_marker_list.xml" value="0.1793478260869565" />
->>>>>>> Stashed changes
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_slideshow.xml" value="0.11503623188405797" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_view_marker.xml" value="0.146875" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/fragment_view_trail.xml" value="0.17135416666666667" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/item_marker.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/layout/nav_header_main.xml" value="0.11503623188405797" />
-<<<<<<< Updated upstream
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/menu/activity_main_drawer.xml" value="0.17135416666666667" />
-=======
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/menu/activity_main_drawer.xml" value="0.8" />
-        <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/menu/create_marker_menu.xml" value="0.146875" />
->>>>>>> Stashed changes
         <entry key="..\:/Users/steph/Documents/mobiledev/assignment-2/TrailApp2/app/src/main/res/menu/main.xml" value="0.17135416666666667" />
       </map>
     </option>

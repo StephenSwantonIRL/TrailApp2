@@ -11,15 +11,64 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="xyz.stephenswanton.trailapp2.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="xyz.stephenswanton.trailapp2.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_all_trails"
+        android:name="xyz.stephenswanton.trailapp2.ui.alltrails.TrailListFragment"
+        android:label="@string/menu_all_trails"
+        tools:layout="@layout/fragment_list_trails" />
+
+    <fragment
+        android:id="@+id/nav_my_trails"
+        android:name="xyz.stephenswanton.trailapp2.ui.mytrails.MyTrailListFragment"
+        android:label="@string/menu_my_trails"
+        tools:layout="@layout/fragment_list_trails" >
+        <action
+            android:id="@+id/action_nav_my_trails_to_createTrailFragment"
+            app:destination="@id/createTrailFragment" />
+        <action
+            android:id="@+id/action_nav_my_trails_to_viewTrailFragment"
+            app:destination="@id/viewTrailFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="xyz.stephenswanton.trailapp2.ui.logout.LogoutFragment"
+        android:label="@string/menu_logout"
+        tools:layout="@layout/fragment_logout" />
+    <fragment
+        android:id="@+id/createTrailFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.createtrail.CreateTrailFragment"
+        android:label="fragment_create_trail"
+        tools:layout="@layout/fragment_create_trail" >
+        <action
+            android:id="@+id/action_createTrailFragment_to_createMarkerFragment"
+            app:destination="@id/createMarkerFragment" />
+        <action
+            android:id="@+id/action_createTrailFragment_to_viewMarkerFragment"
+            app:destination="@id/viewMarkerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createMarkerFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.createmarker.CreateMarkerFragment"
+        android:label="fragment_create_marker"
+        tools:layout="@layout/fragment_create_marker" >
+        <action
+            android:id="@+id/action_createMarkerFragment_to_createTrailFragment"
+            app:destination="@id/createTrailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewTrailFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.viewtrail.ViewTrailFragment"
+        android:label="ViewTrailFragment" >
+        <action
+            android:id="@+id/action_viewTrailFragment_to_viewMarkerFragment"
+            app:destination="@id/viewMarkerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewMarkerFragment"
+        android:name="xyz.stephenswanton.trailapp2.ui.viewmarker.ViewMarkerFragment"
+        android:label="ViewMarkerFragment" />
+
 </navigation>
