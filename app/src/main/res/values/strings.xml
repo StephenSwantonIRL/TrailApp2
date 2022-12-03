@@ -10,4 +10,39 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_logout">Log Out</string>
+    <string name="menu_my_trails">My Trails</string>
+    <string name="menu_all_trails">All Trails</string>
+    <string name="menu_near_me">Near Me</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_trail_name">Enter Trail Name</string>
+    <string name="enter_latitude">Enter Latitude</string>
+    <string name="enter_longitude">Enter Longitude</string>
+    <string name="delete_selected">delete selected</string>
+    <string name="save_marker">Save Marker</string>
+    <string name="add_a_marker">You must add a marker to save</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="enter_username">enter a username</string>
+    <string name="enter_password">enter password</string>
+    <string name="account_created">Account created, you may now log in.</string>
+    <string name="select_marker_image">Select an Image</string>
+    <string name="enter_username_as_email">You must provide an email as username</string>
+    <string name="enter_valid_latitude">"You must enter a valid latitude. "</string>
+    <string name="enter_valid_longitude">You must enter a valid longitude.</string>
+    <string name="location_manually">or add location manually below...</string>
+    <string name="signout_successful">You have successfully signed out.</string>
+    <string-array name="trail_type">
+        <item>Running</item>
+        <item>Hiking</item>
+        <item>Biking</item>
+    </string-array>
 </resources>
