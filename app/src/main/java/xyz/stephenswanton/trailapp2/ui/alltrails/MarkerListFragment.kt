@@ -19,6 +19,7 @@ import xyz.stephenswanton.trailapp2.adapters.MarkerAdapter
 import xyz.stephenswanton.trailapp2.adapters.NavigateAction
 import xyz.stephenswanton.trailapp2.databinding.FragmentMarkerListBinding
 import xyz.stephenswanton.trailapp2.main.MainApp
+import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailMarker
 
 
@@ -58,14 +59,22 @@ class MarkerListFragment : Fragment(), NavigateAction {
     override fun onDeleteIconClick(marker: Long) {
         var app = activity?.application as MainApp?
         app!!.trails.deleteMarkerById(marker)
-        var trailId = app!!.trails.idContainingMarker(marker)
 
-        activity?.let {
-        }
+        var bundle = Bundle()
+        var trailId = app!!.trails.idContainingMarker(marker)
+        var trail = app!!.trails.findById(trailId!!)
+        app!!.tempTrail.markers = trail!!.markers
+        var markers = app!!.tempTrail.markers
+
+        bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
+        bundle.putParcelable("trail", trail)
+        findNavController().navigate(R.id.viewTrailFragment, bundle)
     }
 
     override fun onEditIconClick(marker: TrailMarker) {
-        var app = activity?.application as MainApp?
+        var bundle = Bundle()
+        bundle.putParcelable("marker", marker)
+        findNavController().navigate(R.id.createMarkerFragment, bundle)
     }
 
     override fun onViewIconClick(marker: TrailMarker) {
