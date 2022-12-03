@@ -11,3 +11,5 @@ https://stackoverflow.com/questions/37491093/android-navigationdrawer-overlap-by
 https://developer.android.com/guide/fragments/appbar
 
 https://creatronix.de/pass-custom-objects-via-safeargs/
+
+https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial/
