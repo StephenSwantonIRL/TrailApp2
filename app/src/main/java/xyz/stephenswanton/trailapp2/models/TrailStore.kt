@@ -4,6 +4,7 @@ interface TrailStore {
     fun findAll(): List<Trail>
     fun create(trail: Trail)
     fun update(trail: Trail)
+    fun update(trail: Map< String, Any?>)
     fun findById(trailId: Long): Trail?
     fun deleteMarkerById(markerId: Long)
     fun idContainingMarker(marker: Long):Long?

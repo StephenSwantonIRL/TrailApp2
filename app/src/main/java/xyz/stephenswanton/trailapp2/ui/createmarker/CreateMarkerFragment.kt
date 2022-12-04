@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,14 +20,12 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import timber.log.Timber
+import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateMarkerBinding
 import xyz.stephenswanton.trailapp2.helpers.showImagePicker
 import xyz.stephenswanton.trailapp2.main.MainApp
-import xyz.stephenswanton.trailapp2.models.Trail
-import xyz.stephenswanton.trailapp2.models.TrailMarker
-import xyz.stephenswanton.trailapp2.models.User
-import xyz.stephenswanton.trailapp2.models.generateRandomId
+import xyz.stephenswanton.trailapp2.models.*
 
 class CreateMarkerFragment : Fragment() {
 
@@ -34,20 +33,18 @@ class CreateMarkerFragment : Fragment() {
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var edit = false
+    private var trailStore = TrailFirebaseStore()
+    private var markerStore = MarkerFirebaseStore()
     val IMAGE_REQUEST = 1
+    var marker: TrailMarker = TrailMarker(0L, "0", "0", "", "",markerStore.createKey(),"")
 
-    var marker = TrailMarker(generateRandomId(), "0", "0", "")
     var latitudeRegex: Regex =
         """^(\+|-)?(?:90(?:(?:\.0{1,7})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,7})?))$""".toRegex()
     var longitudeRegex: Regex =
         """^(\+|-)?(?:180(?:(?:\.0{1,7})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,7})?))${'$'}""".toRegex()
 
-    lateinit var app: MainApp
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as MainApp
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity().applicationContext)
         var edit = false
 
@@ -64,6 +61,8 @@ class CreateMarkerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var trail: Trail
+        trail = arguments?.getParcelable<Trail>("trail")!!
 
         if (arguments?.getParcelable<TrailMarker>("marker") != null) {
             edit = true
@@ -76,7 +75,7 @@ class CreateMarkerFragment : Fragment() {
                 .load(marker.image)
                 .into(_fragBinding!!.ivMarkerImage)
         }
-
+        marker.trailId = trail.uid!!
 
 
         _fragBinding!!.btnSaveMarker
@@ -105,12 +104,13 @@ class CreateMarkerFragment : Fragment() {
 
                 } else {
                     if(edit){
-                        app!!.markersArray = app!!.markersArray.filter{item -> item.id != marker.id} as MutableList<TrailMarker>
+                        trail.markers = trail.markers.filter{item -> item != marker.uid} as MutableList<String>
                     }
-                    app!!.markersArray.add(marker.copy())
-                    app!!.tempTrail.markers = mutableListOf<TrailMarker>()
-                    app!!.tempTrail.markers.addAll(app!!.markersArray)
-                    app!!.tempTrailObject.update(app!!.tempTrail)
+                    trail.markers.add(marker.uid!!)
+                    i("trail should follow")
+                    i(trail.toMap().toString())
+                    markerStore.update(marker)
+                    trailStore.update(trail)
                     if(edit){
                     }
                     findNavController().navigateUp()
@@ -148,22 +148,7 @@ class CreateMarkerFragment : Fragment() {
         registerImagePickerCallback()
     }
     private fun registerImagePickerCallback() {
-        imageIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result ->
-                when(result.resultCode){
-                    AppCompatActivity.RESULT_OK -> {
-                        if (result.data != null) {
-                            Timber.i("Got Result ${result.data!!.data}")
-                            marker.image = result.data!!.data!!
-                            Picasso.get()
-                                .load(marker.image)
-                                .into(_fragBinding!!.ivMarkerImage)
-                        }
-                    }
-                    AppCompatActivity.RESULT_CANCELED -> { } else -> { }
-                }
-            }
+
     }
 
     private fun onSubmitForm(user: User, view: View) {

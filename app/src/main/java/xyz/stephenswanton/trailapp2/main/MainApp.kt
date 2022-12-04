@@ -14,8 +14,6 @@ class MainApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        trails = TrailJSONStore(applicationContext)
-        tempTrailObject = TempTrailJSONStore(applicationContext)
         users  = UserJSONStore(applicationContext)
         tempUserObject  = CurrentUserJSONStore(applicationContext)
     }

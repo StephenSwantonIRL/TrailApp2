@@ -37,6 +37,10 @@ class TempTrailJSONStore(private val context: Context) : TrailStore {
         serialize()
     }
 
+    override fun update(trail: Map<String, Any?>) {
+        TODO("Not yet implemented")
+    }
+
     override fun findById(trailId: Long): Trail? {
         TODO("Not yet implemented")
     }

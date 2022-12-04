@@ -14,7 +14,7 @@ data class Trail(
     var distance: Double? = null,
     var trailType: String = "",
     var times: MutableList<TrailTime> = mutableListOf(),
-    var markers: MutableList<TrailMarker> = mutableListOf(),
+    var markers: MutableList<String> = mutableListOf(),
     var uid: String? = null
 ) : Parcelable {
 

@@ -74,6 +74,10 @@ object FirebaseDBManager : TrailStore {
         database.updateChildren(childUpdate)
     }
 
+    override fun update(trail: Map<String, Any?>) {
+        TODO("Not yet implemented")
+    }
+
     override fun findById(trailId: Long): Trail? {
         TODO("Not yet implemented")
     }

@@ -19,8 +19,10 @@ import xyz.stephenswanton.trailapp2.TrailAdapter
 import xyz.stephenswanton.trailapp2.TrailListener
 import xyz.stephenswanton.trailapp2.databinding.FragmentListTrailsBinding
 import xyz.stephenswanton.trailapp2.main.MainApp
+import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailFirebaseStore
+import xyz.stephenswanton.trailapp2.models.TrailMarker
 
 
 class TrailListFragment : Fragment(), TrailListener {
@@ -28,13 +30,12 @@ class TrailListFragment : Fragment(), TrailListener {
     private lateinit var binding: FragmentListTrailsBinding
 
     private lateinit var rvView: View
-    lateinit var app: MainApp
     private var store = TrailFirebaseStore()
+    private var markerStore = MarkerFirebaseStore()
     lateinit var listTrails: List<Trail>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        app = activity?.application as MainApp
         listTrails = store.findAll()
     }
 
@@ -71,6 +72,7 @@ class TrailListFragment : Fragment(), TrailListener {
     override fun onDeleteTrailIconClick(trail: Trail) {
         i(trail.uid.toString())
         store.deleteById(trail.uid!!)
+        deleteMarkersByTrail(trail.uid!!)
         trailListener()
     }
 
@@ -104,6 +106,29 @@ class TrailListFragment : Fragment(), TrailListener {
 
             })
 
+    }
+
+
+    private fun deleteMarkersByTrail(trailId: String){
+        var snapshot = markerStore.dbReference.orderByChild("trailId").equalTo(trailId)
+        snapshot.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Timber.i("Firebase error : ${error.message}")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot){
+                val children = snapshot.children
+
+                children.forEach {
+                    val marker = it.getValue(TrailMarker::class.java)
+                    i(marker.toString())
+                    markerStore.dbReference.child(marker!!.uid!!).removeValue()
+
+                }
+                markerStore.dbReference.removeEventListener(this)
+            }
+
+        })
     }
 
 

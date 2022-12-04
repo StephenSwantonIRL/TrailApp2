@@ -1,6 +1,7 @@
 package xyz.stephenswanton.trailapp2.ui.viewmarker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.squareup.picasso.Picasso
 
 import xyz.stephenswanton.trailapp2.databinding.FragmentViewMarkerBinding
 import xyz.stephenswanton.trailapp2.main.MainApp
+import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.TrailMarker
 import xyz.stephenswanton.trailapp2.models.User
 import xyz.stephenswanton.trailapp2.models.generateRandomId
@@ -23,8 +25,9 @@ class ViewMarkerFragment : Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var edit = false
     val IMAGE_REQUEST = 1
+    var markerStore = MarkerFirebaseStore()
 
-    var marker = TrailMarker(generateRandomId(), "0", "0", "")
+    var marker = TrailMarker(generateRandomId(), "0", "0", "", "", markerStore.createKey(), "" )
     lateinit var app: MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {

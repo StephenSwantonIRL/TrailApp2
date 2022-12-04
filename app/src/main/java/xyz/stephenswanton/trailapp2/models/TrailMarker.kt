@@ -11,9 +11,13 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TrailMarker (
-    var id: Long,
-    var latitude: String,
-    var longitude: String,
+    var id: Long = 0L,
+    var latitude: String = "",
+    var longitude: String = "",
     var notes: String = "",
-    var image: Uri = Uri.EMPTY
-    ) : Parcelable
+    var image: String ="",
+    var uid: String? ="",
+    var trailId: String? = "",
+    ) : Parcelable {
+
+}

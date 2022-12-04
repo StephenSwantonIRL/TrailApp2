@@ -49,6 +49,10 @@ class TrailJSONStore(private val context: Context) : TrailStore {
         serialize()
     }
 
+    override fun update(trail: Map<String, Any?>) {
+        TODO("Not yet implemented")
+    }
+
     override fun findById(trailId: Long): Trail? {
         var trail: Trail? = null
         trails.forEach{ item -> if(item.id == trailId){
@@ -63,7 +67,7 @@ class TrailJSONStore(private val context: Context) : TrailStore {
 
     override fun deleteMarkerById(markerId: Long){
         var trail: Trail? = null
-        trails.forEach{ it.markers.forEach{item -> if(item.id == markerId){
+        trails.forEach{ it.markers.forEach{item -> if(item == markerId as String){
             it.also { trail = it }
         } }}
         i(trail.toString())
@@ -72,8 +76,8 @@ class TrailJSONStore(private val context: Context) : TrailStore {
         var modifiedTrail = trails.filter{it.id == trail?.id}
         if (modifiedTrail.size > 0) {
             var modifiedMarkers =
-                modifiedTrail[0].markers.filter { it.id != markerId } ?: mutableListOf()
-            modifiedTrail[0].markers = modifiedMarkers as MutableList<TrailMarker>
+                modifiedTrail[0].markers.filter { it != markerId as String } ?: mutableListOf()
+            modifiedTrail[0].markers = modifiedMarkers as MutableList<String>
             newTrails.add(modifiedTrail[0])
             trails = newTrails
         }
@@ -86,7 +90,7 @@ class TrailJSONStore(private val context: Context) : TrailStore {
 
     override fun idContainingMarker(markerId: Long): Long {
         var trail: Trail? = null
-        trails.forEach{ it.markers.forEach{item -> if(item.id == markerId){
+        trails.forEach{ it.markers.forEach{item -> if(item == markerId as String){
             it.also { trail = it }
         } }}
         return trail?.id ?: 0

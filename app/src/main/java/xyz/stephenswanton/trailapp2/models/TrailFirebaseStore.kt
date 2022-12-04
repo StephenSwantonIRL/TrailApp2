@@ -48,8 +48,15 @@ class TrailFirebaseStore : TrailStore {
     }
 
     override fun update(trail: Trail) {
+        i(trail.toString())
         val trailId = trail.uid ?: dbReference.push().key.toString()
-        dbReference.child("trails/$trailId").setValue(trail)
+        dbReference.child(trailId).setValue(trail)
+    }
+
+    override fun update(trail: Map<String,Any?>) {
+        i(trail.toString())
+        val trailId = trail["uid"] as String ?: dbReference.push().key.toString()
+        dbReference.child(trailId).setValue(trail)
     }
 
     override fun findById(trailId: Long): Trail? {

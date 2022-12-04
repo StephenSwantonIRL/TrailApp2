@@ -13,16 +13,16 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import timber.log.Timber
 import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateMarkerBinding
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateTrailBinding
 import xyz.stephenswanton.trailapp2.main.MainApp
-import xyz.stephenswanton.trailapp2.models.Trail
-import xyz.stephenswanton.trailapp2.models.TrailMarker
-import xyz.stephenswanton.trailapp2.models.User
-import xyz.stephenswanton.trailapp2.models.generateRandomId
+import xyz.stephenswanton.trailapp2.models.*
 import xyz.stephenswanton.trailapp2.ui.alltrails.MarkerListFragment
 import xyz.stephenswanton.trailapp2.ui.createmarker.CreateMarkerFragment
 
@@ -31,19 +31,14 @@ class CreateTrailFragment : Fragment() {
     private var _fragBinding: FragmentCreateTrailBinding? = null
     var edit: Boolean = false
     var trail = Trail(generateRandomId(), "", "")
-
-
-    lateinit var app: MainApp
+    private var store = TrailFirebaseStore()
+    private var markerStore = MarkerFirebaseStore()
+    private var markers: MutableList<TrailMarker> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        app = activity?.application as MainApp
-        app!!.markersArray = mutableListOf()
         edit = false
-
-
-
 
     }
 
@@ -60,27 +55,24 @@ class CreateTrailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (arguments?.getParcelable<Trail>("trail") != null) {
-
             edit = true
             trail = arguments?.getParcelable<Trail>("trail")!!
-            app!!.tempTrail = app!!.trails.findById(trail.id) ?: trail
-            i(app!!.tempTrail.toString())
-            _fragBinding!!.etTrailName.setText(app!!.tempTrail.name)
-            _fragBinding!!.etTrailDescription.setText(app!!.tempTrail.description)
+            _fragBinding!!.etTrailName.setText(trail.name)
+            _fragBinding!!.etTrailDescription.setText(trail.description)
             var trailTypes = resources.getStringArray(R.array.trail_type)
-            Timber.i(trailTypes.toString())
             var spinnerPosition = trailTypes.indexOf(trail.trailType) as Int
-            Timber.i("SpinnerPosition")
-            Timber.i(spinnerPosition.toString())
             _fragBinding!!.spTrailType.setSelection(spinnerPosition)
         }
 
         if (!edit) {
-            app!!.markers = mutableListOf()
+
+            trail.markers = mutableListOf()
+            trail.uid = store.createKey()
+            findMarkersByTrailId(trail.uid!!)
         } else {
-            app!!.markers = app!!.tempTrail.markers
+           findMarkersByTrailId(trail.uid!!)
         }
-        var markers = app!!.markers
+
         var markerListFragment = MarkerListFragment()
         var bundle = Bundle()
         bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
@@ -100,9 +92,10 @@ class CreateTrailFragment : Fragment() {
                     Snackbar.make(it, R.string.enter_trail_name, Snackbar.LENGTH_LONG)
                         .show()
                 } else {
-                    app!!.tempTrail = trail.copy()
-                    app!!.tempTrailObject.update(app!!.tempTrail)
-                    findNavController().navigate(R.id.createMarkerFragment)
+                    store.update(trail)
+                    var trailWrapper = Bundle()
+                    trailWrapper.putParcelable("trail", trail)
+                    findNavController().navigate(R.id.createMarkerFragment, trailWrapper)
                 }
             }
         _fragBinding!!.spTrailType.onItemSelectedListener =
@@ -121,13 +114,6 @@ class CreateTrailFragment : Fragment() {
 
             }
 
-        fun onSubmitForm(user: User, view: View) {
-
-        }
-
-
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -138,24 +124,22 @@ class CreateTrailFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.miSave -> {
-                if (app!!.tempTrail.name.isEmpty()) {
+                if (trail.name.isEmpty()) {
                     Toast.makeText(activity,R.string.add_a_marker, Toast.LENGTH_LONG).show()
                 } else {
-                    app!!.tempTrail.name = _fragBinding!!.etTrailName.text.toString()
-                    app!!.tempTrail.trailType = trail.trailType.toString()
-                    app!!.tempTrail.description = _fragBinding!!.etTrailDescription.text.toString()
+                    trail.name = _fragBinding!!.etTrailName.text.toString()
+                    trail.trailType = trail.trailType.toString()
+                    trail.description = _fragBinding!!.etTrailDescription.text.toString()
                     if(edit){
-                        app!!.trails.update(app!!.tempTrail.copy())
+                        store.update(trail.copy())
                     } else {
-                        app!!.trails.create(app!!.tempTrail.copy())
+                        store.create(trail.copy())
                     }
-                    app!!.resetTempData()
                     findNavController().navigate(R.id.nav_my_trails)
                 }
 
             };
             R.id.miCancel -> {
-                app!!.resetTempData()
                 findNavController().navigate(R.id.nav_my_trails)
             }
         }
@@ -164,7 +148,9 @@ class CreateTrailFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        var markers = app!!.tempTrail.markers
+        findMarkersByTrailId(trail.uid!!)
+        i("this was called")
+        i(markers.toString())
         var markerListFragment = MarkerListFragment()
         var bundle = Bundle()
         bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
@@ -176,6 +162,34 @@ class CreateTrailFragment : Fragment() {
         }
 
     }
+
+
+    fun findMarkersByTrailId(trailId: String) {
+        var snapshot = markerStore.dbReference.orderByChild("trailId").equalTo(trailId)
+        snapshot.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Timber.i("Firebase error : ${error.message}")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot){
+                val localList = ArrayList<TrailMarker>()
+                val children = snapshot.children
+
+                children.forEach {
+                    val marker = it.getValue(TrailMarker::class.java)
+                    localList.add(marker!!)
+
+                }
+                markers = localList
+                markerStore.dbReference.removeEventListener(this)
+
+            }
+
+        })
+
+    }
+
+
 
 }
 
