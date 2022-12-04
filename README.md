@@ -13,3 +13,5 @@ https://developer.android.com/guide/fragments/appbar
 https://creatronix.de/pass-custom-objects-via-safeargs/
 
 https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial/
+
+https://stackoverflow.com/questions/62902283/how-to-do-a-query-with-that-structure-in-firebase-kotlin

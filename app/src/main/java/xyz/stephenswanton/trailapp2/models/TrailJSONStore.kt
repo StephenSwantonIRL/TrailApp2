@@ -9,6 +9,7 @@ import timber.log.Timber
 import timber.log.Timber.i
 import java.lang.reflect.Type
 import java.util.*
+import kotlin.collections.ArrayList
 
 const val JSON_FILE = "trails.json"
 val gsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
@@ -56,6 +57,10 @@ class TrailJSONStore(private val context: Context) : TrailStore {
         return trail
     }
 
+    override fun findById(trailId: String): Trail? {
+        TODO("Not yet implemented")
+    }
+
     override fun deleteMarkerById(markerId: Long){
         var trail: Trail? = null
         trails.forEach{ it.markers.forEach{item -> if(item.id == markerId){
@@ -75,6 +80,10 @@ class TrailJSONStore(private val context: Context) : TrailStore {
         serialize()
     }
 
+    override fun deleteMarkerById(markerId: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun idContainingMarker(markerId: Long): Long {
         var trail: Trail? = null
         trails.forEach{ it.markers.forEach{item -> if(item.id == markerId){
@@ -83,13 +92,21 @@ class TrailJSONStore(private val context: Context) : TrailStore {
         return trail?.id ?: 0
     }
 
+    override fun idContainingMarker(marker: String): String? {
+        TODO("Not yet implemented")
+    }
+
 
     override fun deleteAll() {
         trails = mutableListOf()
         serialize()
         }
 
-    override fun deleteById(trailId: Long) {
+    override fun deleteById(trailId: String) {
+        TODO("Not yet implemented")
+    }
+
+     fun deleteById(trailId: Long) {
             trails = trails!!.filter{it.id != trailId} as MutableList<Trail>
             serialize()
         }

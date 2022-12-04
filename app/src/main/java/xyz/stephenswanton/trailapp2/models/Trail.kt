@@ -9,7 +9,7 @@ import kotlinx.parcelize.RawValue
 @Parcelize
 data class Trail(
     var id: Long = 0L,
-    var name: String,
+    var name: String = "",
     var description: String? = null,
     var distance: Double? = null,
     var trailType: String = "",

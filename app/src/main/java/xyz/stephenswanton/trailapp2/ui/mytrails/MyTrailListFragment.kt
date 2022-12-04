@@ -99,7 +99,7 @@ class MyTrailListFragment : Fragment(), NavigateAction, TrailListener {
     }
 
     override fun onDeleteTrailIconClick(trail: Trail) {
-        app!!.trails.deleteById(trail.id)
+        app!!.trails.deleteById(trail.uid!!)
         findNavController().navigate(R.id.nav_my_trails)
     }
 

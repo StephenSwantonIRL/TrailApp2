@@ -59,7 +59,7 @@ class LoginFragment : Fragment() {
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(app.mainExecutor, OnCompleteListener { task ->
                     if(task.isSuccessful) {
                         Toast.makeText(activity, "Successfully Logged In", Toast.LENGTH_LONG).show()
-                        findNavController().navigate(R.id.nav_my_trails)
+                        findNavController().navigate(R.id.nav_all_trails)
                     }else {
                         Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show()
                     }

@@ -1,13 +1,8 @@
 package xyz.stephenswanton.trailapp2.models
 
 import android.content.Context
-import android.net.Uri
-import com.google.gson.*
-import com.google.gson.reflect.TypeToken
 import xyz.stephenswanton.trailapp2.helpers.*
 import timber.log.Timber
-import java.lang.reflect.Type
-import java.util.*
 
 const val tJSON_FILE = "trail.json"
 
@@ -27,6 +22,8 @@ class TempTrailJSONStore(private val context: Context) : TrailStore {
         return trails
     }
 
+
+
     override fun create(trail: Trail) {
         trail.id = generateRandomId()
         trails.add(trail)
@@ -44,7 +41,15 @@ class TempTrailJSONStore(private val context: Context) : TrailStore {
         TODO("Not yet implemented")
     }
 
+    override fun findById(trailId: String): Trail? {
+        TODO("Not yet implemented")
+    }
+
     override fun deleteMarkerById(markerId: Long) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteMarkerById(markerId: String) {
         TODO("Not yet implemented")
     }
 
@@ -52,6 +57,10 @@ class TempTrailJSONStore(private val context: Context) : TrailStore {
         TODO("Not yet implemented")
         var value: Long = 0
         return value
+    }
+
+    override fun idContainingMarker(marker: String): String? {
+        TODO("Not yet implemented")
     }
 
     fun deleteMarkerById(id: Long, id1: Long) {
@@ -62,9 +71,11 @@ class TempTrailJSONStore(private val context: Context) : TrailStore {
            trails = mutableListOf()
            serialize()
         }
-    override fun deleteById(trailId: Long) {
+
+    override fun deleteById(trailId: String) {
         TODO("Not yet implemented")
-        }
+    }
+
 
     private fun serialize() {
         val jsonString = gsonBuilder.toJson(trails, listType)

@@ -1,7 +1,6 @@
 package firebase
 
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
 import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailStore
@@ -55,7 +54,7 @@ object FirebaseDBManager : TrailStore {
         database.updateChildren(childAdd)
     }
 
-    override fun deleteById(id: Long) {
+    override fun deleteById(id: String) {
 
         val childDelete : MutableMap<String, Any?> = HashMap()
         childDelete["/trails/$id"] = null
@@ -79,11 +78,23 @@ object FirebaseDBManager : TrailStore {
         TODO("Not yet implemented")
     }
 
+    override fun findById(trailId: String): Trail? {
+        TODO("Not yet implemented")
+    }
+
     override fun deleteMarkerById(markerId: Long) {
         TODO("Not yet implemented")
     }
 
+    override fun deleteMarkerById(markerId: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun idContainingMarker(marker: Long): Long? {
+        TODO("Not yet implemented")
+    }
+
+    override fun idContainingMarker(marker: String): String? {
         TODO("Not yet implemented")
     }
 
