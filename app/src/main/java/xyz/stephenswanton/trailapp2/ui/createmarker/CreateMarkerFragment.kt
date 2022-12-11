@@ -4,40 +4,47 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
+import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import timber.log.Timber
 import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateMarkerBinding
 import xyz.stephenswanton.trailapp2.helpers.showImagePicker
-import xyz.stephenswanton.trailapp2.main.MainApp
-import xyz.stephenswanton.trailapp2.models.*
+import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
+import xyz.stephenswanton.trailapp2.models.Trail
+import xyz.stephenswanton.trailapp2.models.TrailFirebaseStore
+import xyz.stephenswanton.trailapp2.models.TrailMarker
 
 class CreateMarkerFragment : Fragment() {
 
     private var _fragBinding: FragmentCreateMarkerBinding? = null
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    var bundle: Bundle = Bundle()
+
     var edit = false
     private var trailStore = TrailFirebaseStore()
     private var markerStore = MarkerFirebaseStore()
     val IMAGE_REQUEST = 1
     var marker: TrailMarker = TrailMarker(0L, "0", "0", "", "",markerStore.createKey(),"")
-
+    private var trail: Trail = Trail()
     var latitudeRegex: Regex =
         """^(\+|-)?(?:90(?:(?:\.0{1,7})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,7})?))$""".toRegex()
     var longitudeRegex: Regex =
@@ -61,8 +68,20 @@ class CreateMarkerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var trail: Trail
-        trail = arguments?.getParcelable<Trail>("trail")!!
+        if(arguments?.getParcelable<Trail>("trail") != null ) {
+            trail = arguments?.getParcelable<Trail>("trail")!!
+            restOfFragmentOnViewCreated()
+        } else if (arguments?.getString("trailId") != null) {
+            findTrailById(arguments?.getString("trailId")!!)
+
+        } else {
+            trail = Trail()
+            restOfFragmentOnViewCreated()
+        }
+
+    }
+
+    private fun restOfFragmentOnViewCreated(){
 
         if (arguments?.getParcelable<TrailMarker>("marker") != null) {
             edit = true
@@ -71,10 +90,13 @@ class CreateMarkerFragment : Fragment() {
             _fragBinding!!.etLongitude.setText(marker.longitude)
             _fragBinding!!.etNotes.setText(marker.notes)
             _fragBinding!!.btnSaveMarker.setText(R.string.save_marker)
-            Picasso.get()
-                .load(marker.image)
-                .into(_fragBinding!!.ivMarkerImage)
+            if(marker.image !="") {
+                Picasso.get()
+                    .load(marker.image)
+                    .into(_fragBinding!!.ivMarkerImage)
+            }
         }
+        i(trail.toString())
         marker.trailId = trail.uid!!
 
 
@@ -107,13 +129,11 @@ class CreateMarkerFragment : Fragment() {
                         trail.markers = trail.markers.filter{item -> item != marker.uid} as MutableList<String>
                     }
                     trail.markers.add(marker.uid!!)
-                    i("trail should follow")
-                    i(trail.toMap().toString())
                     markerStore.update(marker)
                     trailStore.update(trail)
-                    if(edit){
-                    }
-                    findNavController().navigateUp()
+                    var trailWrapper = Bundle()
+                    trailWrapper.putParcelable("trail", trail)
+                    findNavController().navigate(R.id.createTrailFragment, trailWrapper)
                 }
             }
 
@@ -146,14 +166,15 @@ class CreateMarkerFragment : Fragment() {
             showImagePicker(imageIntentLauncher)
         }
         registerImagePickerCallback()
+
     }
+
+
     private fun registerImagePickerCallback() {
 
     }
 
-    private fun onSubmitForm(user: User, view: View) {
 
-    }
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
@@ -169,6 +190,28 @@ class CreateMarkerFragment : Fragment() {
         }
     }
 
-}
+    private fun findTrailById(trailId:String) {
+        trailStore.dbReference.child(trailId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.i("Firebase error : ${error.message}")
+                }
 
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val localTrail = snapshot.getValue(Trail::class.java)
+                    trail = localTrail ?: Trail()
+                    i(trail.toString())
+                    trailStore.dbReference.removeEventListener(this)
+
+                    bundle.putParcelable("trail", trail as Trail?)
+                    restOfFragmentOnViewCreated()
+                }
+
+            })
+
+    }
+
+
+
+}
 

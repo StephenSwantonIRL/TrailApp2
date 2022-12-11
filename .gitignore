@@ -26,3 +26,5 @@ local.properties
 .idea/misc.xml
 app/google-services.json
 .idea/gradle.xml
+.idea/gradle.xml
+.idea/deploymentTargetDropDown.xml

@@ -9,7 +9,7 @@ import xyz.stephenswanton.trailapp2.databinding.ItemMarkerBinding
 
 
 interface NavigateAction {
-    fun onDeleteIconClick(marker: Long)
+    fun onDeleteIconClick(marker: TrailMarker)
     fun onEditIconClick(marker: TrailMarker)
     fun onViewIconClick(marker: TrailMarker)
 }
@@ -42,7 +42,7 @@ class MarkerAdapter(
             binding.tvLatitude.text = "Latitude: "+ marker.latitude.toString()
             binding.tvLongitude.text = "Longitude: "+ marker.longitude.toString()
             binding.ivDelete.setOnClickListener{
-                    listener?.onDeleteIconClick(marker.id)
+                    listener?.onDeleteIconClick(marker)
                 }
             binding.ivEditMarker.setOnClickListener{
                 listener?.onEditIconClick(marker)

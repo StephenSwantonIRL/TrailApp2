@@ -69,8 +69,11 @@ class CreateTrailFragment : Fragment() {
             trail.markers = mutableListOf()
             trail.uid = store.createKey()
             findMarkersByTrailId(trail.uid!!)
+            i(markers.toString())
         } else {
+            i(trail.uid!!.toString())
            findMarkersByTrailId(trail.uid!!)
+            i(markers.toString())
         }
 
         var markerListFragment = MarkerListFragment()
@@ -140,7 +143,7 @@ class CreateTrailFragment : Fragment() {
 
             };
             R.id.miCancel -> {
-                findNavController().navigate(R.id.nav_my_trails)
+                findNavController().navigateUp()
             }
         }
         return true
@@ -149,17 +152,7 @@ class CreateTrailFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         findMarkersByTrailId(trail.uid!!)
-        i("this was called")
-        i(markers.toString())
-        var markerListFragment = MarkerListFragment()
-        var bundle = Bundle()
-        bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
-        markerListFragment.setArguments(bundle)
 
-        childFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, markerListFragment)
-            commit()
-        }
 
     }
 
@@ -182,7 +175,15 @@ class CreateTrailFragment : Fragment() {
                 }
                 markers = localList
                 markerStore.dbReference.removeEventListener(this)
+                var markerListFragment = MarkerListFragment()
+                var bundle = Bundle()
+                bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
+                markerListFragment.setArguments(bundle)
 
+                childFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment, markerListFragment)
+                    commit()
+                }
             }
 
         })

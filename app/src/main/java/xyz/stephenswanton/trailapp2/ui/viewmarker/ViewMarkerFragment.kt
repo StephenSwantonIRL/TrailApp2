@@ -59,9 +59,12 @@ class ViewMarkerFragment : Fragment() {
             } else {
                 _fragBinding!!.tvNotesView.setText("No notes provided")
             }
-            Picasso.get()
-                .load(marker.image)
-                .into(_fragBinding!!.ivMarkerImage)
+            if(marker.image !=""){
+                Picasso.get()
+                    .load(marker.image)
+                    .into(_fragBinding!!.ivMarkerImage)
+            }
+
         }
     }
 

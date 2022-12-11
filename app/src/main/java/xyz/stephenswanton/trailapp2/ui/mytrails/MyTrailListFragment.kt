@@ -69,10 +69,10 @@ class MyTrailListFragment : Fragment(), NavigateAction, TrailListener {
 
     }
 
-    override fun onDeleteIconClick(marker: Long) {
+    override fun onDeleteIconClick(marker: TrailMarker) {
         var app = activity?.application as MainApp?
-        app!!.trails.deleteMarkerById(marker)
-        var trailId = app!!.trails.idContainingMarker(marker)
+        app!!.trails.deleteMarkerById(marker.uid!!)
+        var trailId = app!!.trails.idContainingMarker(marker.uid!!)
 
         activity?.let {
         }

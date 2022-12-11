@@ -75,8 +75,20 @@ class TrailFirebaseStore : TrailStore {
     }
 
     override fun findById(trailId: String): Trail? {
-        TODO("Not yet implemented")
+        var trail: Trail? = null
+        dbReference.child("$trailId")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    trail = dataSnapshot.getValue(Trail::class.java)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+            })
+        return trail
     }
+
 
     override fun deleteMarkerById(markerId: Long) {
 
