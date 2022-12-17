@@ -80,6 +80,7 @@ class MarkerListFragment : Fragment(), NavigateAction {
     override fun onViewIconClick(marker: TrailMarker) {
         var bundle = Bundle()
         bundle.putParcelable("marker", marker)
+        bundle.putString("trailId", marker.trailId)
         findNavController().navigate(R.id.viewMarkerFragment, bundle)
     }
 

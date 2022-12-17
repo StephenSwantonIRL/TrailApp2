@@ -73,6 +73,7 @@ class CreateTrailFragment : Fragment() {
         } else {
             i(trail.uid!!.toString())
            findMarkersByTrailId(trail.uid!!)
+            i("edit case")
             i(markers.toString())
         }
 
@@ -174,7 +175,10 @@ class CreateTrailFragment : Fragment() {
 
                 }
                 markers = localList
+                i(markers.toString())
                 markerStore.dbReference.removeEventListener(this)
+                i("this was called")
+                i(markers.toString())
                 var markerListFragment = MarkerListFragment()
                 var bundle = Bundle()
                 bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
