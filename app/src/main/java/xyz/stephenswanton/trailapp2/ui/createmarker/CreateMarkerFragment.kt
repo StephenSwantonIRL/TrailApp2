@@ -102,9 +102,20 @@ class CreateMarkerFragment : Fragment() {
             fragBinding.etNotes.setText(marker.notes)
             fragBinding.btnSaveMarker.setText(R.string.save_marker)
             if(marker.image !="") {
-                Picasso.get()
-                    .load(marker.image)
-                    .into(fragBinding.ivMarkerImage)
+                FirebaseStorage.getInstance().reference.child("markers").child("${marker.uid}.jpg")
+                .downloadUrl.addOnSuccessListener {
+                    // Got the download URL for 'users/me/profile.png'
+
+                        Picasso.get().load(it)
+                            .into(fragBinding.ivMarkerImage)
+                }.addOnFailureListener {
+                    i("error loading cloud storage image")
+                        i(it.message.toString())
+                }
+
+
+
+
             }
         }
         i(trail.toString())
@@ -239,8 +250,8 @@ class CreateMarkerFragment : Fragment() {
         uploadTask.addOnFailureListener {
             i(it.message.toString())
         }.addOnSuccessListener {
-            i("it succeeded")
-            
+            marker.image = imageRef.toString()
+
         }
     }
 
