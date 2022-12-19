@@ -15,3 +15,7 @@ https://creatronix.de/pass-custom-objects-via-safeargs/
 https://blog.mindorks.com/firebase-login-and-authentication-android-tutorial/
 
 https://stackoverflow.com/questions/62902283/how-to-do-a-query-with-that-structure-in-firebase-kotlin
+
+Loading an image from cloud storage directly into picasso
+https://stackoverflow.com/questions/39896511/load-image-from-firebase-storage-with-picasso-to-imageview-in-infowindow-picass
+https://firebase.google.com/docs/storage/android/delete-files

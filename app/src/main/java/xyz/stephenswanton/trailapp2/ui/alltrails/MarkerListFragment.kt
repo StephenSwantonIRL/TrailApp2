@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import timber.log.Timber
 import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
@@ -62,6 +63,15 @@ class MarkerListFragment : Fragment(), NavigateAction {
     }
 
     override fun onDeleteIconClick(marker: TrailMarker) {
+
+        FirebaseStorage.getInstance().reference.child("markers").child("${marker.uid}.jpg")
+            .delete().addOnSuccessListener {
+            // File deleted successfully
+        }.addOnFailureListener {
+            i(it.message.toString())
+        }
+
+
         markerStore.deleteById(marker.uid!!)
         bundle = Bundle()
         bundle.putString("trail", marker.trailId!!)
