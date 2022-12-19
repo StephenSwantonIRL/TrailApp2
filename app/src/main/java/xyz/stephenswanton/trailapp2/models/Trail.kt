@@ -30,15 +30,6 @@ data class Trail(
         )
     }
 
-    override fun describeContents(): Int {
-        TODO("Not yet implemented")
-    }
 
-    companion object : Parceler<Trail> {
-        override fun Trail.write(dest: Parcel, flags: Int) {
-            TODO("Not yet implemented")
-        }
 
-        override fun create(parcel: Parcel): Trail = TODO()
-    }
 }

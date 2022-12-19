@@ -3,15 +3,17 @@ package xyz.stephenswanton.trailapp2.ui.createmarker
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -21,20 +23,29 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.UploadTask
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 import timber.log.Timber
 import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentCreateMarkerBinding
+import xyz.stephenswanton.trailapp2.helpers.FirebaseImageManager
 import xyz.stephenswanton.trailapp2.helpers.showImagePicker
 import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailFirebaseStore
 import xyz.stephenswanton.trailapp2.models.TrailMarker
+import java.io.ByteArrayOutputStream
+
+import com.google.firebase.storage.FirebaseStorage
+
 
 class CreateMarkerFragment : Fragment() {
 
     private var _fragBinding: FragmentCreateMarkerBinding? = null
+    private val fragBinding get() = _fragBinding!!
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var bundle: Bundle = Bundle()
@@ -54,7 +65,7 @@ class CreateMarkerFragment : Fragment() {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity().applicationContext)
         var edit = false
-
+        registerImagePickerCallback()
     }
 
     override fun onCreateView(
@@ -63,7 +74,7 @@ class CreateMarkerFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _fragBinding = FragmentCreateMarkerBinding.inflate(layoutInflater)
-        return _fragBinding!!.root
+        return fragBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,25 +97,25 @@ class CreateMarkerFragment : Fragment() {
         if (arguments?.getParcelable<TrailMarker>("marker") != null) {
             edit = true
             marker = arguments?.getParcelable<TrailMarker>("marker")!!
-            _fragBinding!!.etLatitude.setText(marker.latitude)
-            _fragBinding!!.etLongitude.setText(marker.longitude)
-            _fragBinding!!.etNotes.setText(marker.notes)
-            _fragBinding!!.btnSaveMarker.setText(R.string.save_marker)
+            fragBinding.etLatitude.setText(marker.latitude)
+            fragBinding.etLongitude.setText(marker.longitude)
+            fragBinding.etNotes.setText(marker.notes)
+            fragBinding.btnSaveMarker.setText(R.string.save_marker)
             if(marker.image !="") {
                 Picasso.get()
                     .load(marker.image)
-                    .into(_fragBinding!!.ivMarkerImage)
+                    .into(fragBinding.ivMarkerImage)
             }
         }
         i(trail.toString())
         marker.trailId = trail.uid!!
 
 
-        _fragBinding!!.btnSaveMarker
+        fragBinding.btnSaveMarker
             .setOnClickListener{
-                marker.latitude = _fragBinding!!.etLatitude.text.toString()
-                marker.longitude = _fragBinding!!.etLongitude.text.toString()
-                marker.notes = _fragBinding!!.etNotes.text.toString()
+                marker.latitude = fragBinding.etLatitude.text.toString()
+                marker.longitude = fragBinding.etLongitude.text.toString()
+                marker.notes = fragBinding.etNotes.text.toString()
                 if (marker.latitude.isEmpty() || marker.longitude.isEmpty() ) {
                     if (marker.latitude.isEmpty()) {
                         Snackbar.make(it, R.string.enter_latitude, Snackbar.LENGTH_LONG)
@@ -137,7 +148,7 @@ class CreateMarkerFragment : Fragment() {
                 }
             }
 
-        _fragBinding!!.btnUseLocation
+        fragBinding.btnUseLocation
             .setOnClickListener{
 
                 locationPermissionRequest.launch(arrayOf(
@@ -155,24 +166,84 @@ class CreateMarkerFragment : Fragment() {
 
                     fusedLocationClient.lastLocation
                         .addOnSuccessListener { location: Location? ->
-                            _fragBinding!!.etLatitude.setText(location?.latitude.toString())
-                            _fragBinding!!.etLongitude.setText(location?.longitude.toString())
+                            fragBinding.etLatitude.setText(location?.latitude.toString())
+                            fragBinding.etLongitude.setText(location?.longitude.toString())
 
                         }
                 }
             }
 
-        _fragBinding!!.btnAddImage.setOnClickListener {
+
+        fragBinding.btnAddImage.setOnClickListener {
             showImagePicker(imageIntentLauncher)
         }
-        registerImagePickerCallback()
 
     }
 
 
     private fun registerImagePickerCallback() {
 
+        imageIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { result ->
+
+                        if (result.data != null) {
+                            i("Got Result ${result.data!!.data}")
+                            marker.image = result.data!!.data!!.toString()
+                            updateImage(marker.uid!!,result.data!!.data!!,fragBinding.ivMarkerImage, false  )
+
+                        }
+                    }
+
+                }
+
+
+    fun updateImage(markerId: String, imageUri : Uri?, imageView: ImageView, updating : Boolean) {
+        Picasso.get().load(imageUri)
+            .into(object : Target {
+                override fun onBitmapLoaded(bitmap: Bitmap?,
+                                            from: Picasso.LoadedFrom?
+                ) {
+                    Timber.i("DX onBitmapLoaded $bitmap")
+                    uploadImageToFirebase(markerId, bitmap!!, updating)
+                    imageView.setImageBitmap(bitmap)
+                }
+
+                override fun onBitmapFailed(e: java.lang.Exception?,
+                                            errorDrawable: Drawable?) {
+                    Timber.i("DX onBitmapFailed $e")
+                }
+
+                override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                    Timber.i("DX onPrepareLoad $placeHolderDrawable")
+                    //uploadImageToFirebase(userid, defaultImageUri.value,updating)
+                }
+            })
     }
+
+
+
+
+    fun uploadImageToFirebase(markerId: String, bitmap: Bitmap, updating : Boolean) {
+        // Get the data from an ImageView as bytes
+        val imageRef = FirebaseStorage.getInstance().reference.child("markers").child("${markerId}.jpg")
+        i(imageRef.toString())
+
+        //val bitmap = (imageView as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        lateinit var uploadTask: UploadTask
+
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+        uploadTask = imageRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            i(it.message.toString())
+        }.addOnSuccessListener {
+            i("it succeeded")
+            
+        }
+    }
+
 
 
     val locationPermissionRequest = registerForActivityResult(
