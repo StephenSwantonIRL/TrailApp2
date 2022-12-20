@@ -21,6 +21,7 @@ import xyz.stephenswanton.trailapp2.adapters.MarkerAdapter
 import xyz.stephenswanton.trailapp2.adapters.NavigateAction
 import xyz.stephenswanton.trailapp2.databinding.FragmentMarkerListBinding
 import xyz.stephenswanton.trailapp2.helpers.SwipeToDeleteCallback
+import xyz.stephenswanton.trailapp2.helpers.SwipeToEditCallback
 import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailFirebaseStore
@@ -71,6 +72,17 @@ class MarkerListFragment : Fragment(), NavigateAction {
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(recyclerView)
 
+        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = binding.rvMarkerList.adapter as MarkerAdapter
+                onEditIconClick(adapter.returnMarker(viewHolder.adapterPosition))
+            }
+        }
+        val itemTouchEditHelper = ItemTouchHelper(swipeEditHandler)
+        itemTouchEditHelper.attachToRecyclerView(recyclerView)
+
+
+
     }
 
     override fun onDeleteIconClick(marker: TrailMarker) {
@@ -81,7 +93,7 @@ class MarkerListFragment : Fragment(), NavigateAction {
             }.addOnFailureListener {
                 i(it.message.toString())
             }
-        
+
         markerStore.deleteById(marker.uid!!)
         bundle = Bundle()
         bundle.putString("trail", marker.trailId!!)
