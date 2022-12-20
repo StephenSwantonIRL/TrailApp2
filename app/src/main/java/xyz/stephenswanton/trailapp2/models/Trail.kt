@@ -1,6 +1,7 @@
 package xyz.stephenswanton.trailapp2.models
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.Exclude
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
@@ -15,6 +16,7 @@ data class Trail(
     var trailType: String = "",
     var times: MutableList<TrailTime> = mutableListOf(),
     var markers: MutableList<String> = mutableListOf(),
+    var createdBy: String = "",
     var uid: String? = null
 ) : Parcelable {
 

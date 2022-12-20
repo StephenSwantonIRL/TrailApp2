@@ -22,12 +22,6 @@ class MainApp : Application() {
     var tempTrail: Trail = Trail(0,"","")
     var currentUser: User? = null
 
-    fun resetTempData(){
-        tempTrailObject.deleteAll()
-        markers = mutableListOf()
-        tempTrail = Trail(0,"","")
-        markersArray = mutableListOf()
-    }
 
     fun logoutCurrentUser(){
         currentUser = null

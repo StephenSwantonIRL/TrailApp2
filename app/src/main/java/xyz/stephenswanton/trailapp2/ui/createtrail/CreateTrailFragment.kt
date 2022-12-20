@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -92,6 +93,7 @@ class CreateTrailFragment : Fragment() {
             .setOnClickListener {
                 trail.name = _fragBinding!!.etTrailName.text.toString()
                 trail.description = _fragBinding!!.etTrailDescription.text.toString()
+                trail.createdBy = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                 if (trail.name.isEmpty()) {
                     Snackbar.make(it, R.string.enter_trail_name, Snackbar.LENGTH_LONG)
                         .show()
@@ -134,6 +136,7 @@ class CreateTrailFragment : Fragment() {
                     trail.name = _fragBinding!!.etTrailName.text.toString()
                     trail.trailType = trail.trailType.toString()
                     trail.description = _fragBinding!!.etTrailDescription.text.toString()
+                    trail.createdBy = FirebaseAuth.getInstance().currentUser?.uid ?: ""
                     if(edit){
                         store.update(trail.copy())
                     } else {
