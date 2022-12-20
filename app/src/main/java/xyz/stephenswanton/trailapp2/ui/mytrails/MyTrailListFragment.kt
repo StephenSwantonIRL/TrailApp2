@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -86,7 +87,7 @@ class MyTrailListFragment : Fragment(), TrailListener {
     }
 
     private fun trailListener() {
-        store.dbReference
+        store.dbReference.orderByChild("createdBy").equalTo(FirebaseAuth.getInstance().currentUser!!.uid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
                     Timber.i("Firebase error : ${error.message}")
@@ -133,5 +134,6 @@ class MyTrailListFragment : Fragment(), TrailListener {
 
         })
     }
+
 
 }
