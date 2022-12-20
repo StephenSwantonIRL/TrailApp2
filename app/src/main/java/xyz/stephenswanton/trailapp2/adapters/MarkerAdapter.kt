@@ -15,7 +15,7 @@ interface NavigateAction {
 }
 
 class MarkerAdapter(
-    var markers: List<TrailMarker>,
+    var markers: MutableList<TrailMarker>,
     var listener: NavigateAction?
 ): RecyclerView.Adapter<MarkerAdapter.MarkerViewHolder>() {
 
@@ -52,5 +52,14 @@ class MarkerAdapter(
             }
         }
             }
+
+    fun removeAt(position: Int) {
+        markers.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun returnMarker(position: Int): TrailMarker {
+        return markers[position]
+    }
 }
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +20,7 @@ import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.adapters.MarkerAdapter
 import xyz.stephenswanton.trailapp2.adapters.NavigateAction
 import xyz.stephenswanton.trailapp2.databinding.FragmentMarkerListBinding
+import xyz.stephenswanton.trailapp2.helpers.SwipeToDeleteCallback
 import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.Trail
 import xyz.stephenswanton.trailapp2.models.TrailFirebaseStore
@@ -40,7 +42,6 @@ class MarkerListFragment : Fragment(), NavigateAction {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         super.onCreate(savedInstanceState)
         binding = FragmentMarkerListBinding.inflate(layoutInflater)
         return binding.root
@@ -55,10 +56,20 @@ class MarkerListFragment : Fragment(), NavigateAction {
                 ?: listOf<TrailMarker>()
         val recyclerView = itemView.findViewById<RecyclerView>(R.id.rvMarkerList)
         recyclerView.layoutManager = LinearLayoutManager(context)
-        // set the custom adapter to the RecyclerView
 
-        adapter = MarkerAdapter(markers, this)
+        adapter = MarkerAdapter(markers as MutableList<TrailMarker>, this)
+
         recyclerView.adapter = adapter
+
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = binding.rvMarkerList.adapter as MarkerAdapter
+                onDeleteIconClick(adapter.returnMarker(viewHolder.adapterPosition))
+                adapter.removeAt(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemTouchDeleteHelper.attachToRecyclerView(recyclerView)
 
     }
 
@@ -66,12 +77,11 @@ class MarkerListFragment : Fragment(), NavigateAction {
 
         FirebaseStorage.getInstance().reference.child("markers").child("${marker.uid}.jpg")
             .delete().addOnSuccessListener {
-            // File deleted successfully
-        }.addOnFailureListener {
-            i(it.message.toString())
-        }
-
-
+                // File deleted successfully
+            }.addOnFailureListener {
+                i(it.message.toString())
+            }
+        
         markerStore.deleteById(marker.uid!!)
         bundle = Bundle()
         bundle.putString("trail", marker.trailId!!)
@@ -133,5 +143,5 @@ class MarkerListFragment : Fragment(), NavigateAction {
         string += " }Bundle"
         return string
     }
-    }
+}
 
