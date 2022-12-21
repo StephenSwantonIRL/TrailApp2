@@ -6,6 +6,7 @@ import android.location.Location
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,15 +20,22 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import timber.log.Timber
 import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
+import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.TrailMarker
+import xyz.stephenswanton.trailapp2.ui.alltrails.MarkerListFragment
 
 class NearMeMapFragment : Fragment() {
 
-    private lateinit var markers: List<TrailMarker>
+    var markers = mutableListOf<TrailMarker>()
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     var mapLocation = LatLng(0.0,0.0)
+    val markerStore = MarkerFirebaseStore()
 
     private val callback = OnMapReadyCallback { googleMap ->
         i(markers.toString())
@@ -58,6 +66,7 @@ class NearMeMapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getCurrentLocation()
+
 
 
     }
@@ -95,16 +104,40 @@ class NearMeMapFragment : Fragment() {
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     mapLocation = LatLng(location!!.latitude, location!!.longitude )
-                    markers =
-                        arguments?.getParcelableArrayList<TrailMarker>("markers") as? List<TrailMarker>
-                            ?: listOf<TrailMarker>()
+                    findAllMarkersAndApplyToMap()
 
-                    val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-                    mapFragment?.getMapAsync(callback)
+
 
                 }
         }
 
     }
+
+    fun findAllMarkersAndApplyToMap() {
+        var snapshot = markerStore.dbReference
+        snapshot.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                Timber.i("Firebase error : ${error.message}")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot){
+                val localList = ArrayList<TrailMarker>()
+                val children = snapshot.children
+
+                children.forEach {
+                    val marker = it.getValue(TrailMarker::class.java)
+                    localList.add(marker!!)
+
+                }
+                markers = localList
+                markerStore.dbReference.removeEventListener(this)
+                val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+                mapFragment?.getMapAsync(callback)
+            }
+
+        })
+
+    }
+
 
 }
