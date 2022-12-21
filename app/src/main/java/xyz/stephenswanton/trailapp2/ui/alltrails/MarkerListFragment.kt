@@ -96,7 +96,7 @@ class MarkerListFragment : Fragment(), NavigateAction {
 
         markerStore.deleteById(marker.uid!!)
         bundle = Bundle()
-        bundle.putString("trail", marker.trailId!!)
+        bundle.putString("trailId", marker.trailId!!)
         markerListener()
 
         findNavController().navigate(R.id.viewTrailFragment, bundle)

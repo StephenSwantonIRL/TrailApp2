@@ -16,7 +16,6 @@ import xyz.stephenswanton.trailapp2.main.MainApp
 import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.TrailMarker
 import xyz.stephenswanton.trailapp2.models.User
-import xyz.stephenswanton.trailapp2.models.generateRandomId
 
 class ViewMarkerFragment : Fragment() {
 
@@ -27,7 +26,7 @@ class ViewMarkerFragment : Fragment() {
     val IMAGE_REQUEST = 1
     var markerStore = MarkerFirebaseStore()
 
-    var marker = TrailMarker(generateRandomId(), "0", "0", "", "", markerStore.createKey(), "" )
+    var marker = TrailMarker(0L, "0", "0", "", "", markerStore.createKey(), "" )
     lateinit var app: MainApp
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -14,18 +14,6 @@ class MainApp : Application() {
     override fun onCreate() {
         super.onCreate()
         Timber.plant(Timber.DebugTree())
-        users  = UserJSONStore(applicationContext)
-        tempUserObject  = CurrentUserJSONStore(applicationContext)
     }
-
-    var markers: MutableList<TrailMarker> = mutableListOf()
-    var tempTrail: Trail = Trail(0,"","")
-    var currentUser: User? = null
-
-
-    fun logoutCurrentUser(){
-        currentUser = null
-    }
-
 
 }

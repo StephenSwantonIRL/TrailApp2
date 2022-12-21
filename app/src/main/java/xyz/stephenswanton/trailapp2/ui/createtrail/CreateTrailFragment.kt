@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -31,7 +32,7 @@ class CreateTrailFragment : Fragment() {
 
     private var _fragBinding: FragmentCreateTrailBinding? = null
     var edit: Boolean = false
-    var trail = Trail(generateRandomId(), "", "")
+    var trail = Trail()
     private var store = TrailFirebaseStore()
     private var markerStore = MarkerFirebaseStore()
     private var markers: MutableList<TrailMarker> = mutableListOf()
@@ -70,12 +71,11 @@ class CreateTrailFragment : Fragment() {
             trail.markers = mutableListOf()
             trail.uid = store.createKey()
             findMarkersByTrailId(trail.uid!!)
-            i(markers.toString())
+
         } else {
-            i(trail.uid!!.toString())
+
            findMarkersByTrailId(trail.uid!!)
-            i("edit case")
-            i(markers.toString())
+
         }
 
         var markerListFragment = MarkerListFragment()
@@ -142,12 +142,14 @@ class CreateTrailFragment : Fragment() {
                     } else {
                         store.create(trail.copy())
                     }
-                    findNavController().navigate(R.id.nav_my_trails)
+                    val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_my_trails, true).build()
+                    findNavController().navigate(R.id.nav_my_trails, null, navOptions)
                 }
 
             };
             R.id.miCancel -> {
-                findNavController().navigateUp()
+                val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_my_trails, true).build()
+                findNavController().navigate(R.id.nav_my_trails, null, navOptions)
             }
         }
         return true

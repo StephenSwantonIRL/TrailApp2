@@ -53,6 +53,9 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
         auth = FirebaseAuth.getInstance()
+        if(auth.currentUser != null){
+            findNavController().navigate(R.id.nav_my_trails)
+        }
         binding.loginBtn.setOnClickListener {
             var email: String = binding.emailEdtText.text.toString()
             var password: String = binding.passEdtText.text.toString()

@@ -4,8 +4,11 @@ package xyz.stephenswanton.trailapp2.ui.viewtrail
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.model.Marker
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -63,6 +66,23 @@ class ViewTrailFragment : Fragment() {
         //findMarkersByTrailId(trail.uid!!)
 
 
+    }
+
+
+
+
+    override fun onCreateOptionsMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.view_trail_menu, menu)
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.miCancel -> {
+                findNavController().navigateUp()
+            }
+        }
+        return true
     }
 
 

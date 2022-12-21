@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import at.favre.lib.crypto.bcrypt.BCrypt
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -42,7 +44,8 @@ class LogoutFragment : Fragment() {
         }  catch (e: ClassCastException) {
 
         }
-        findNavController().clearBackStack(R.id.nav_login)
+         val navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_login, true).build()
+        findNavController().navigate(R.id.nav_login, null, navOptions)
     }
 
 
