@@ -1,6 +1,6 @@
 package xyz.stephenswanton.trailapp2.ui.useraccount
 
-import android.content.Intent
+
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -8,17 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import xyz.stephenswanton.trailapp2.databinding.FragmentForgotPasswordBinding
 import com.google.android.gms.tasks.OnCompleteListener
 import xyz.stephenswanton.trailapp2.MainActivity
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentLoginBinding
-import xyz.stephenswanton.trailapp2.databinding.FragmentSignupBinding
+
 
 import xyz.stephenswanton.trailapp2.main.MainApp
+
+
+interface LoginUIManager {
+    fun enableNavDrawer()
+    fun refreshImageHeader()
+}
 
 
 class LoginFragment : Fragment() {
@@ -58,7 +62,14 @@ class LoginFragment : Fragment() {
             } else{
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(app.mainExecutor, OnCompleteListener { task ->
                     if(task.isSuccessful) {
+                        try {
+                            (activity as LoginUIManager).refreshImageHeader()
+                            (activity as LoginUIManager).enableNavDrawer()
+                        }  catch (e: ClassCastException) {
+
+                        }
                         Toast.makeText(activity, "Successfully Logged In", Toast.LENGTH_LONG).show()
+
                         findNavController().navigate(R.id.nav_all_trails)
                     }else {
                         Toast.makeText(activity, "Login Failed", Toast.LENGTH_LONG).show()

@@ -10,6 +10,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import timber.log.Timber
+import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.databinding.FragmentViewTrailBinding
 import xyz.stephenswanton.trailapp2.main.MainApp
@@ -65,7 +66,7 @@ class ViewTrailFragment : Fragment() {
     }
 
 
-    fun findMarkersByTrailId(trailId: String) {
+    fun findMarkersByTrailId(trailId: String, initialLoad: Boolean) {
         var snapshot = markerStore.dbReference.orderByChild("trailId").equalTo(trailId)
         snapshot.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
@@ -82,18 +83,18 @@ class ViewTrailFragment : Fragment() {
 
                 }
                 markers = localList
-                Timber.i(markers.toString())
                 markerStore.dbReference.removeEventListener(this)
-                Timber.i("this was called")
-                Timber.i(markers.toString())
-                var markerListFragment = MarkerListFragment()
-                var bundle = Bundle()
-                bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
-                markerListFragment.setArguments(bundle)
 
-                childFragmentManager.beginTransaction().apply {
-                    replace(R.id.flFragment, markerListFragment)
-                    commit()
+                if(initialLoad) {
+                    var markerListFragment = MarkerListFragment()
+                    var bundle = Bundle()
+                    bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
+                    markerListFragment.setArguments(bundle)
+
+                    childFragmentManager.beginTransaction().apply {
+                        replace(R.id.flFragment, markerListFragment)
+                        commit()
+                    }
                 }
             }
 
@@ -105,7 +106,8 @@ class ViewTrailFragment : Fragment() {
     fun restOfFragmentOnViewCreated(){
         _fragBinding!!.tvTrailName.setText(trail.name)
         _fragBinding!!.tvTrailDescription.setText(trail.description)
-        var markers = trail.markers
+        findMarkersByTrailId(trail.uid!!, true)
+        i(markers.size.toString())
         var markerListFragment = MarkerListFragment()
         var bundle = Bundle()
         bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
@@ -113,13 +115,15 @@ class ViewTrailFragment : Fragment() {
 
         var trailMapFragment = TrailMapFragment()
         trailMapFragment.setArguments(bundle)
-
-        childFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment, markerListFragment)
-            commit()
-        }
+            childFragmentManager.beginTransaction().apply {
+                replace(R.id.flFragment, markerListFragment)
+                commit()
+            }
 
         _fragBinding!!.btnMarkers.setOnClickListener {
+            findMarkersByTrailId(trail.uid!!, false)
+            bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
+            markerListFragment.setArguments(bundle)
             childFragmentManager.beginTransaction().apply {
                 replace(R.id.flFragment, markerListFragment)
                 commit()
@@ -128,6 +132,11 @@ class ViewTrailFragment : Fragment() {
 
         _fragBinding!!.btnMapView
             .setOnClickListener {
+                findMarkersByTrailId(trail.uid!!, false)
+                bundle.putParcelableArrayList("markers", markers as ArrayList<out Parcelable?>?)
+
+                var trailMapFragment = TrailMapFragment()
+                trailMapFragment.setArguments(bundle)
                 childFragmentManager.beginTransaction().apply {
                     replace(R.id.flFragment, trailMapFragment)
                     commit()
@@ -156,7 +165,6 @@ class ViewTrailFragment : Fragment() {
                 }
 
             })
-
     }
 
 

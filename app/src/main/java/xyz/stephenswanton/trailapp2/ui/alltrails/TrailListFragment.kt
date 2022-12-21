@@ -79,7 +79,7 @@ class TrailListFragment : Fragment(), TrailListener {
     override fun onViewIconClick(trail: Trail) {
         var bundle = Bundle()
         bundle.putParcelable("trail", trail)
-        findNavController().navigate(R.id.createTrailFragment, bundle)
+        findNavController().navigate(R.id.viewTrailFragment, bundle)
     }
 
     private fun trailListener() {

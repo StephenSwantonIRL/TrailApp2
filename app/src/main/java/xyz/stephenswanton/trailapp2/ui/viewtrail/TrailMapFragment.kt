@@ -12,6 +12,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.models.TrailMarker
 
@@ -20,6 +21,7 @@ class TrailMapFragment : Fragment() {
     private lateinit var markers: List<TrailMarker>
 
     private val callback = OnMapReadyCallback { googleMap ->
+        i(markers.toString())
         var locations: MutableList<LatLng> = mutableListOf()
         for (marker in markers){
             locations.add(LatLng(marker.latitude.toDouble(), marker.longitude.toDouble()))
