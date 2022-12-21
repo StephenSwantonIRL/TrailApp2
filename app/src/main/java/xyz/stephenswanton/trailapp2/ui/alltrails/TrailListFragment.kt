@@ -15,8 +15,8 @@ import com.google.firebase.database.ValueEventListener
 import timber.log.Timber
 import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
-import xyz.stephenswanton.trailapp2.TrailAdapter
 import xyz.stephenswanton.trailapp2.TrailListener
+import xyz.stephenswanton.trailapp2.TrailViewOnlyAdapter
 import xyz.stephenswanton.trailapp2.databinding.FragmentListTrailsBinding
 import xyz.stephenswanton.trailapp2.main.MainApp
 import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
@@ -26,7 +26,7 @@ import xyz.stephenswanton.trailapp2.models.TrailMarker
 
 
 class TrailListFragment : Fragment(), TrailListener {
-    private var adapter: RecyclerView.Adapter<TrailAdapter.TrailViewHolder>? = null
+    private var adapter: RecyclerView.Adapter<TrailViewOnlyAdapter.ViewOnlyTrailViewHolder>? = null
     private lateinit var binding: FragmentListTrailsBinding
 
     private lateinit var rvView: View
@@ -101,7 +101,7 @@ class TrailListFragment : Fragment(), TrailListener {
                     listTrails = localList
                     store.dbReference.removeEventListener(this)
                     binding!!.rvTrails.layoutManager = LinearLayoutManager(activity)
-                    binding.rvTrails.adapter = TrailAdapter(listTrails, this@TrailListFragment)
+                    binding.rvTrails.adapter = TrailViewOnlyAdapter(listTrails, this@TrailListFragment)
                 }
 
             })
