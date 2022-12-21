@@ -61,7 +61,7 @@ class MyTrailListFragment : Fragment(), TrailListener {
         trailListener()
 
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.viewTrailFragment)
+            findNavController().navigate(R.id.createTrailFragment)
         }
 
     }
