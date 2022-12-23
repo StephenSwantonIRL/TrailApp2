@@ -6,7 +6,6 @@ import android.location.Location
 import androidx.fragment.app.Fragment
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,7 @@ import timber.log.Timber.i
 import xyz.stephenswanton.trailapp2.R
 import xyz.stephenswanton.trailapp2.models.MarkerFirebaseStore
 import xyz.stephenswanton.trailapp2.models.TrailMarker
-import xyz.stephenswanton.trailapp2.ui.alltrails.MarkerListFragment
+
 
 class NearMeMapFragment : Fragment() {
 
